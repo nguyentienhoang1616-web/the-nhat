@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thẻ từ vựng nhà thuê</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2c6e49">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Thẻ Nhật">
+<style>.wrap{padding-top:calc(14px + env(safe-area-inset-top));padding-bottom:calc(28px + env(safe-area-inset-bottom))}</style>
+<style>
+:root{
+  --bg:#f4f1ea; --ink:#1f2a24; --muted:#6a746e; --card:#ffffff; --card2:#e8f3ea; --line:#d8d2c4;
+  --ok:#1f8a4c; --no:#c0392b; --accent:#2c6e49; --chip:#ebe6d8; --chipOn:#2c6e49; --chipOnInk:#fff;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#15191a; --ink:#ecefe9; --muted:#9aa59d; --card:#222a27; --card2:#1d3a2b; --line:#34403a;
+    --ok:#4cc27d; --no:#ef6b5b; --accent:#6fcf97; --chip:#262f2b; --chipOn:#6fcf97; --chipOnInk:#0d1a12;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,"Hiragino Sans","Noto Sans JP","Yu Gothic","Meiryo",sans-serif}
+.term,.read{font-family:"Hiragino Sans","Noto Sans JP","Yu Gothic","Meiryo",system-ui,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:14px 16px 28px}
+h1{font-size:18px;margin:4px 0 10px;font-weight:700}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:thin}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--chip);color:var(--ink);
+  padding:7px 11px;border-radius:999px;font-size:13px;cursor:pointer;white-space:nowrap}
+.chip.on{background:var(--chipOn);color:var(--chipOnInk);border-color:var(--chipOn);font-weight:700}
+.opts{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted);margin:2px 0 10px;align-items:center}
+.opts label{display:flex;align-items:center;gap:5px;cursor:pointer}
+.opts button{margin-left:auto;background:none;border:none;color:var(--muted);text-decoration:underline;font-size:12px;cursor:pointer}
+.prog{font-size:13px;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px}
+.bar{height:5px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.stage{touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;position:relative}
+.stage.drag{transition:none}
+.stage.snap{transition:transform .25s ease,opacity .25s ease}
+.card{perspective:1200px;height:min(58vh,400px);min-height:300px}
+.inner{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:18px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:22px 18px;box-shadow:0 6px 22px rgba(0,0,0,.08)}
+.front{background:var(--card)}
+.back{background:var(--card2);transform:rotateY(180deg)}
+.tag{position:absolute;top:12px;left:14px;font-size:12px;color:var(--muted)}
+.hint{position:absolute;bottom:12px;font-size:12px;color:var(--muted)}
+.term{font-weight:700;line-height:1.25;word-break:break-all}
+.t1{font-size:76px}.t2{font-size:54px}.t3{font-size:38px}.t4{font-size:26px}
+.read{margin-top:14px;font-size:24px;color:var(--accent);font-weight:600;word-break:break-all}
+.mean{font-size:30px;font-weight:700;line-height:1.3}
+.note{margin-top:14px;font-size:17px;color:var(--ink);background:rgba(0,0,0,.05);padding:8px 12px;border-radius:10px}
+.small{margin-top:12px;font-size:13px;color:var(--muted)}
+.small b{color:var(--ink);font-size:16px}
+.btns{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px}
+.btns button{padding:14px 6px;font-size:15px;border-radius:12px;border:1px solid var(--line);background:var(--card);
+  color:var(--ink);cursor:pointer;font-weight:600}
+.btns .no{color:var(--no);border-color:var(--no)}
+.btns .ok{color:var(--ok);border-color:var(--ok)}
+.help{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6;text-align:center}
+.done{text-align:center;padding:40px 10px}
+.done h2{margin:0 0 8px}
+.done button{margin-top:14px;padding:12px 18px;border-radius:12px;border:none;background:var(--chipOn);color:var(--chipOnInk);font-size:15px;font-weight:700;cursor:pointer}
+.stamp{position:absolute;top:18px;padding:4px 12px;border:3px solid;border-radius:8px;font-weight:800;font-size:20px;opacity:0;pointer-events:none;z-index:2}
+.stamp.ok{right:16px;color:var(--ok);transform:rotate(12deg)}
+.stamp.no{left:16px;color:var(--no);transform:rotate(-12deg)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📇 Thẻ từ vựng nhà thuê</h1>
+  <div class="chips" id="chips"></div>
+  <div class="opts">
+    <label><input type="checkbox" id="oShuffle" checked> Trộn</label>
+    <label><input type="checkbox" id="oUnknown" checked> Chỉ thẻ chưa thuộc</label>
+    <label><input type="checkbox" id="oRead" checked> Hiện cách đọc mặt trước</label>
+    <button id="reset">Xoá tiến độ</button>
+  </div>
+  <div class="prog"><span id="pLeft"></span><span id="pKnown"></span></div>
+  <div class="bar"><i id="bar"></i></div>
+  <div id="area"></div>
+  <div class="btns" id="btns">
+    <button class="no" id="bNo">✗ Chưa thuộc</button>
+    <button id="bFlip">↺ Lật thẻ</button>
+    <button class="ok" id="bOk">✓ Thuộc rồi</button>
+  </div>
+  <div class="help">Bấm vào thẻ để lật. Vuốt sang phải = thuộc rồi, vuốt sang trái = chưa thuộc.<br>Bàn phím: Space lật · ← chưa thuộc · → thuộc rồi.</div>
+</div>
+<script>
+const DATA = [["Người nước ngoài · ai được ở (câu ①) (47)", "外国籍可", "がいこくせきか", "Người nước ngoài ĐƯỢC thuê", "✅", "ITANDI, Zumen"], ["Người nước ngoài · ai được ở (câu ①) (47)", "外国人可", "がいこくじんか", "Người nước ngoài được thuê", "✅", "REINS"], ["Người nước ngoài · ai được ở (câu ①) (47)", "外国人入居可", "がいこくじんにゅうきょか", "Người nước ngoài vào ở được", "✅", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "国籍不問", "こくせきふもん", "Không hỏi quốc tịch", "✅ (不問 = không hỏi)", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "外国籍不可", "がいこくせきふか", "Người nước ngoài KHÔNG được", "❌ dừng, không gửi khách", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "外国人不可", "がいこくじんふか", "Người nước ngoài không được", "❌", "REINS"], ["Người nước ngoài · ai được ở (câu ①) (47)", "日本人のみ", "にほんじんのみ", "Chỉ người Nhật", "❌", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "日本人限定", "にほんじんげんてい", "Giới hạn người Nhật", "❌", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "外国籍相談", "がいこくせきそうだん", "Người nước ngoài: phải bàn / gọi hỏi", "❓", "REINS"], ["Người nước ngoài · ai được ở (câu ①) (47)", "外国人相談", "がいこくじんそうだん", "Người nước ngoài: phải bàn / gọi hỏi", "❓", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "相談可", "そうだんか", "Có thể bàn", "❓ KHÔNG phải ✅", "Zumen"], ["Người nước ngoài · ai được ở (câu ①) (47)", "外国籍", "がいこくせき", "Quốc tịch nước ngoài", "Chữ báo hiệu ô ①", "ITANDI, REINS, Zumen"], ["Người nước ngoài · ai được ở (câu ①) (47)", "外国人", "がいこくじん", "Người nước ngoài", "", "ITANDI, RealNetPro, REINS, AtHome"], ["Người nước ngoài · ai được ở (câu ①) (47)", "国籍", "こくせき", "Quốc tịch", "", "ITANDI, REINS, Zumen"], ["Người nước ngoài · ai được ở (câu ①) (47)", "日本語可", "にほんごか", "Cần nói được tiếng Nhật", "❓ hỏi khách", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "日本語堪能", "にほんごたんのう", "Giỏi tiếng Nhật", "❓", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "日本人の緊急連絡先", "にほんじんのきんきゅうれんらくさき", "Người liên lạc khẩn cấp phải là người Nhật", "❓ hỏi khách có ai không", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "緊急連絡先", "きんきゅうれんらくさき", "Người liên lạc khẩn cấp", "", "ITANDI"], ["Người nước ngoài · ai được ở (câu ①) (47)", "保証人は日本人", "ほしょうにんはにほんじん", "Người bảo lãnh phải là người Nhật", "❓", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "海外審査不可", "かいがいしんさふか", "Không xét người đang ở nước ngoài", "⚠️ KHÔNG phải ô ①. Khách ở Nhật không sao", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "留学生可", "りゅうがくせいか", "Du học sinh được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "留学生不可", "りゅうがくせいふか", "Du học sinh không được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "留学生", "りゅうがくせい", "Du học sinh", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "学生可", "がくせいか", "Học sinh / sinh viên được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "学生不可", "がくせいふか", "Học sinh / sinh viên không được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "学生", "がくせい", "Học sinh / sinh viên", "", "ITANDI, Village"], ["Người nước ngoài · ai được ở (câu ①) (47)", "社会人", "しゃかいじん", "Người đi làm", "", "ITANDI"], ["Người nước ngoài · ai được ở (câu ①) (47)", "社会人限定", "しゃかいじんげんてい", "Chỉ người đi làm", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "単身", "たんしん", "Một người ở", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "単身者限定", "たんしんしゃげんてい", "Chỉ cho 1 người", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "二人入居可", "ふたりにゅうきょか", "2 người ở được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "二人入居不可", "ふたりにゅうきょふか", "2 người không được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "ルームシェア", "ルームシェア", "Ở ghép (bạn bè)", "可 = được · 不可 = không", "Village"], ["Người nước ngoài · ai được ở (câu ①) (47)", "子供可", "こどもか", "Có trẻ con được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "子供不可", "こどもふか", "Trẻ con không được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "ペット可", "ペットか", "Nuôi thú cưng được", "不可 = không", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "法人", "ほうじん", "Công ty (pháp nhân)", "", "ITANDI, RealNetPro, Zumen"], ["Người nước ngoài · ai được ở (câu ①) (47)", "法人契約", "ほうじんけいやく", "Công ty đứng tên hợp đồng", "hay tăng tiền", "Zumen"], ["Người nước ngoài · ai được ở (câu ①) (47)", "法人限定", "ほうじんげんてい", "Chỉ công ty thuê", "❌ với khách cá nhân", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "個人", "こじん", "Cá nhân", "", "ITANDI"], ["Người nước ngoài · ai được ở (câu ①) (47)", "高齢者", "こうれいしゃ", "Người cao tuổi", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "生活保護不可", "せいかつほごふか", "Người nhận trợ cấp không được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "事務所使用可", "じむしょしようか", "Dùng làm văn phòng được", "", ""], ["Người nước ngoài · ai được ở (câu ①) (47)", "入居者", "にゅうきょしゃ", "Người vào ở", "", "ITANDI"], ["Người nước ngoài · ai được ở (câu ①) (47)", "入居者条件", "にゅうきょしゃじょうけん", "Điều kiện người vào ở", "", "ITANDI"], ["Người nước ngoài · ai được ở (câu ①) (47)", "連帯保証人", "れんたいほしょうにん", "Người bảo lãnh liên đới (cá nhân)", "", "ITANDI, Zumen"], ["Người nước ngoài · ai được ở (câu ①) (47)", "保証人不要", "ほしょうにんふよう", "Không cần người bảo lãnh", "", "Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "募集中", "ぼしゅうちゅう", "Đang tuyển người thuê", "còn phải xem nút WEB", "ITANDI"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "申込あり", "もうしこみあり", "Đã có người nộp đơn", "mình nộp dự bị", "ITANDI"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "申込", "もうしこみ", "Nộp đơn đăng ký", "", "ITANDI, RealNetPro, UR, Village"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "商談中", "しょうだんちゅう", "Đang đàm phán", "", "RealNetPro"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "審査中", "しんさちゅう", "Đang xét duyệt", "", "RealNetPro"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "現況", "げんきょう", "Hiện trạng căn", "", "Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "空室", "くうしつ", "Phòng trống", "", "RealNetPro, UR, Village, Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "空家", "あきや", "Nhà trống", "", "UR"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "居住中", "きょじゅうちゅう", "Đang có người ở", "xem ngày người cũ ra", "Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "賃貸中", "ちんたいちゅう", "Đang cho thuê (có người)", "", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "入居時期", "にゅうきょじき", "Thời điểm vào ở", "", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "入居可能日", "にゅうきょかのうび", "Ngày có thể vào ở", "可 giữa ô ≠ ô ①", "LEO"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "入居可能時期", "にゅうきょかのうじき", "Thời kỳ có thể vào ở", "", "ITANDI, RealNetPro, UR, Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "即入居", "そくにゅうきょ", "Vào ngay", "", "Village"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "退去予定", "たいきょよてい", "Dự kiến người cũ ra", "", "RealNetPro, Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "解約予定", "かいやくよてい", "Dự kiến huỷ HĐ (người cũ)", "", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "清掃中", "せいそうちゅう", "Đang dọn phòng", "", "RealNetPro"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "内装中", "ないそうちゅう", "Đang sửa nội thất", "", "RealNetPro"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "募集開始日", "ぼしゅうかいしび", "Ngày bắt đầu tuyển", "", "ITANDI"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "情報更新日", "じょうほうこうしんび", "Ngày cập nhật tin", "tin cũ không gửi khách", "ITANDI, RealNetPro"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "情報公開日", "じょうほうこうかいび", "Ngày đăng tin", "", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "先行契約", "せんこうけいやく", "Ký trước (trước khi xem)", "nộp đơn trước khi được xem nhà", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "内見", "ないけん", "Xem nhà", "", "ITANDI, Village, Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "内見予約", "ないけんよやく", "Đặt lịch xem nhà", "", "ITANDI, Village"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "物確", "ぶっかく", "Gọi hỏi căn còn trống không", "", "ITANDI, Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "物件確認", "ぶっけんかくにん", "Xác nhận căn (gọi hỏi)", "", "ITANDI"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "物確不要", "ぶっかくふよう", "Không cần gọi hỏi lại", "", "ITANDI, Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "要物確", "ようぶっかく", "Cần gọi hỏi lại", "", "ITANDI"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "他社予約有", "たしゃよやくあり", "Công ty khác đã đặt", "", "ITANDI"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "普通借家", "ふつうしゃくや", "Hợp đồng thường (gia hạn được)", "", "LEO, Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "定期借家", "ていきしゃくや", "Hợp đồng có hạn, hết là phải ra", "báo khách", "Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "告知事項", "こくちじこう", "Điều phải báo (người mất trong nhà…)", "", "Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "告知事項あり", "こくちじこうあり", "Có điều phải báo", "", "Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "心理的瑕疵", "しんりてきかし", "Có chuyện tâm lý (người mất…)", "", "Zumen"], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "事故物件", "じこぶっけん", "Nhà có sự cố (người mất)", "", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "孤独死", "こどくし", "Chết một mình", "", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "訳あり", "わけあり", "Có lý do đặc biệt", "", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "他部屋写真", "たべやしゃしん", "Ảnh phòng khác cùng toà", "", ""], ["Tình trạng căn · còn thuê được không (câu ②) (39)", "募集対象外", "ぼしゅうたいしょうがい", "Không thuộc diện tuyển", "", ""], ["Tiền · tên từng khoản (câu ③) (62)", "賃料", "ちんりょう", "Tiền nhà", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "家賃", "やちん", "Tiền nhà", "", "UR, Village, LEO, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "月額賃料", "げつがくちんりょう", "Tiền nhà hàng tháng", "", "LEO"], ["Tiền · tên từng khoản (câu ③) (62)", "総賃料", "そうちんりょう", "Tổng tiền thuê (nhà + phí quản lý)", "dùng tính bảo lãnh", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "管理費", "かんりひ", "Phí quản lý", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "共益費", "きょうえきひ", "Phí chung (như phí quản lý)", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "管理費・共益費", "かんりひ・きょうえきひ", "Phí quản lý / phí chung", "", "ITANDI, RealNetPro, AtHome"], ["Tiền · tên từng khoản (câu ③) (62)", "敷金", "しききん", "Tiền cọc", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "礼金", "れいきん", "Tiền lễ (không hoàn)", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "保証金", "ほしょうきん", "Tiền cọc (kiểu Kansai)", "khác 保証料", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "敷引", "しきびき", "Phần cọc bị giữ lại", "", "ITANDI, RealNetPro"], ["Tiền · tên từng khoản (câu ③) (62)", "償却", "しょうきゃく", "Phần cọc bị trừ khi ra", "", "RealNetPro"], ["Tiền · tên từng khoản (câu ③) (62)", "保証会社", "ほしょうがいしゃ", "Công ty bảo lãnh", "", "ITANDI, RealNetPro, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "保証料", "ほしょうりょう", "Phí bảo lãnh", "lần đầu 100% × (nhà + phí)", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "保証委託料", "ほしょういたくりょう", "Phí uỷ thác bảo lãnh", "", "LEO"], ["Tiền · tên từng khoản (câu ③) (62)", "火災保険", "かさいほけん", "Bảo hiểm cháy", "", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "鍵交換", "かぎこうかん", "Thay khoá", "", "RealNetPro, REINS, LEO, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "鍵交換費", "かぎこうかんひ", "Phí thay khoá", "", "LEO"], ["Tiền · tên từng khoản (câu ③) (62)", "鍵交換代", "かぎこうかんだい", "Tiền thay khoá", "", "REINS, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "事務手数料", "じむてすうりょう", "Phí giấy tờ", "", "ITANDI, LEO, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "仲介手数料", "ちゅうかいてすうりょう", "Phí môi giới", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "手数料", "てすうりょう", "Phí (thủ tục)", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "口座振替手数料", "こうざふりかえてすうりょう", "Phí trích tài khoản", "", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "書類作成費", "しょるいさくせいひ", "Phí làm giấy tờ", "", ""], ["Tiền · tên từng khoản (câu ③) (62)", "室内清掃", "しつないせいそう", "Dọn phòng", "không ghi lúc nào → đầu vào", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "退去時清掃費", "たいきょじせいそうひ", "Phí dọn khi ra nhà", "ra nhà", "LEO"], ["Tiền · tên từng khoản (câu ③) (62)", "クリーニング", "クリーニング", "Dọn vệ sinh (cleaning)", "", "Village, AtHome"], ["Tiền · tên từng khoản (câu ③) (62)", "室内清掃費用", "しつないせいそうひよう", "Chi phí dọn phòng", "", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "清掃代", "せいそうだい", "Tiền dọn", "", "RealNetPro, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "抗菌", "こうきん", "Kháng khuẩn", "đầu vào", ""], ["Tiền · tên từng khoản (câu ③) (62)", "消毒", "しょうどく", "Khử trùng", "đầu vào", ""], ["Tiền · tên từng khoản (câu ③) (62)", "24時間サポート", "にじゅうよじかんサポート", "Hỗ trợ 24 giờ", "có 月 → tháng, không → đầu vào", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "安心入居サポート", "あんしんにゅうきょサポート", "Hỗ trợ an tâm vào ở", "", ""], ["Tiền · tên từng khoản (câu ③) (62)", "ルームサポート", "ルームサポート", "Hỗ trợ phòng", "", ""], ["Tiền · tên từng khoản (câu ③) (62)", "サポート", "サポート", "Hỗ trợ (support)", "", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "町会費", "ちょうかいひ", "Phí tổ dân phố", "", ""], ["Tiền · tên từng khoản (câu ③) (62)", "水道", "すいどう", "Nước", "", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "水道代", "すいどうだい", "Tiền nước", "", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "水道代定額", "すいどうだいていがく", "Tiền nước khoán", "", ""], ["Tiền · tên từng khoản (câu ③) (62)", "駐車場", "ちゅうしゃじょう", "Bãi đỗ ô tô", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "駐輪場", "ちゅうりんじょう", "Chỗ để xe đạp", "", "ITANDI, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "バイク置場", "バイクおきば", "Chỗ để xe máy", "", "ITANDI, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "前家賃", "まえやちん", "Tiền nhà trả trước", "", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "日割り家賃", "ひわりやちん", "Tiền nhà tính theo ngày", "tháng đầu vào giữa tháng", "Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "更新料", "こうしんりょう", "Phí gia hạn", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "短期解約違約金", "たんきかいやくいやくきん", "Phạt huỷ sớm", "ghi riêng", "Village, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "違約金", "いやくきん", "Tiền phạt", "", "Village, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "解約", "かいやく", "Huỷ hợp đồng", "", "Village, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "フリーレント", "フリーレント", "Miễn tiền nhà vài tháng", "", "ITANDI, UR, Village"], ["Tiền · tên từng khoản (câu ③) (62)", "貸主負担", "かしぬしふたん", "Chủ nhà chịu", "khoản đó = 0", ""], ["Tiền · tên từng khoản (câu ③) (62)", "初期費用", "しょきひよう", "Tiền đầu vào (chi phí ban đầu)", "", "RealNetPro, AtHome, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "初期費用合計", "しょきひようごうけい", "Tổng tiền đầu vào", "", "AtHome"], ["Tiền · tên từng khoản (câu ③) (62)", "諸費用", "しょひよう", "Các chi phí khác", "", "RealNetPro"], ["Tiền · tên từng khoản (câu ③) (62)", "見積作成", "みつもりさくせい", "Lập bảng báo giá", "", "AtHome"], ["Tiền · tên từng khoản (câu ③) (62)", "特典", "とくてん", "Ưu đãi", "", ""], ["Tiền · tên từng khoản (câu ③) (62)", "別途", "べっと", "Tính riêng / phí thêm", "đọc cả câu", ""], ["Tiền · tên từng khoản (câu ③) (62)", "必須", "ひっす", "Bắt buộc", "", "ITANDI, RealNetPro, REINS"], ["Tiền · tên từng khoản (câu ③) (62)", "任意", "にんい", "Tuỳ chọn", "", "ITANDI"], ["Tiền · tên từng khoản (câu ③) (62)", "無料", "むりょう", "Miễn phí", "", "LEO, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "不要", "ふよう", "Không cần", "", "ITANDI, LEO, Zumen"], ["Tiền · tên từng khoản (câu ③) (62)", "なし", "なし", "Không có", "", "nhiều web"], ["Tiền · tên từng khoản (câu ③) (62)", "あり", "あり", "Có", "", "nhiều web"], ["Tiền · lúc nào trả và đơn vị (19)", "月額", "げつがく", "Hàng tháng", "→ tiền tháng", "LEO, AtHome, Zumen"], ["Tiền · lúc nào trả và đơn vị (19)", "毎月", "まいつき", "Mỗi tháng", "→ tiền tháng", "LEO"], ["Tiền · lúc nào trả và đơn vị (19)", "月々", "つきづき", "Từng tháng", "→ tiền tháng", ""], ["Tiền · lúc nào trả và đơn vị (19)", "入居時", "にゅうきょじ", "Lúc vào ở", "→ đầu vào", ""], ["Tiền · lúc nào trả và đơn vị (19)", "契約時", "けいやくじ", "Lúc ký hợp đồng", "→ đầu vào", ""], ["Tiền · lúc nào trả và đơn vị (19)", "初回", "しょかい", "Lần đầu", "→ đầu vào", "Zumen"], ["Tiền · lúc nào trả và đơn vị (19)", "翌月分", "よくげつぶん", "Phần tháng sau (trả trước)", "→ đầu vào", ""], ["Tiền · lúc nào trả và đơn vị (19)", "退去時", "たいきょじ", "Lúc ra nhà", "→ ra nhà", "Village, LEO, Zumen"], ["Tiền · lúc nào trả và đơn vị (19)", "年間", "ねんかん", "Mỗi năm", "→ gia hạn", ""], ["Tiền · lúc nào trả và đơn vị (19)", "更新", "こうしん", "Gia hạn hợp đồng", "", "nhiều web"], ["Tiền · lúc nào trả và đơn vị (19)", "更新時", "こうしんじ", "Lúc gia hạn", "", ""], ["Tiền · lúc nào trả và đơn vị (19)", "円", "えん", "Yên", "", "nhiều web"], ["Tiền · lúc nào trả và đơn vị (19)", "万円", "まんえん", "Vạn yên (10.000円)", "6,6万 = 66.000円", "ITANDI, REINS"], ["Tiền · lúc nào trả và đơn vị (19)", "ヶ月", "かげつ", "… tháng (đơn vị)", "× 賃料, không × phí", "REINS, Village, LEO, Zumen"], ["Tiền · lúc nào trả và đơn vị (19)", "税込", "ぜいこみ", "Đã gồm thuế", "lấy đúng số", "ITANDI, AtHome"], ["Tiền · lúc nào trả và đơn vị (19)", "税抜", "ぜいぬき", "Chưa gồm thuế", "× 1,1", ""], ["Tiền · lúc nào trả và đơn vị (19)", "税別", "ぜいべつ", "Thuế tính riêng", "× 1,1", ""], ["Tiền · lúc nào trả và đơn vị (19)", "外税", "そとぜい", "Thuế ngoài", "× 1,1", ""], ["Tiền · lúc nào trả và đơn vị (19)", "内税", "うちぜい", "Thuế trong", "", ""], ["Phòng và toà nhà (31)", "間取り", "まどり", "Kiểu phòng", "", "nhiều web"], ["Phòng và toà nhà (31)", "ワンルーム", "ワンルーム", "Phòng 1 gian (1R)", "", "RealNetPro, REINS"], ["Phòng và toà nhà (31)", "専有面積", "せんゆうめんせき", "Diện tích riêng", "", "nhiều web"], ["Phòng và toà nhà (31)", "面積", "めんせき", "Diện tích", "", "nhiều web"], ["Phòng và toà nhà (31)", "帖", "じょう", "Chiếu tatami (đơn vị diện tích)", "", "Zumen"], ["Phòng và toà nhà (31)", "洋室", "ようしつ", "Phòng kiểu Tây", "", "Zumen"], ["Phòng và toà nhà (31)", "和室", "わしつ", "Phòng kiểu Nhật", "", "Zumen"], ["Phòng và toà nhà (31)", "築年数", "ちくねんすう", "Số năm tuổi toà nhà", "", "ITANDI, RealNetPro, LEO, AtHome"], ["Phòng và toà nhà (31)", "築年月", "ちくねんげつ", "Năm tháng xây", "", "REINS, Zumen"], ["Phòng và toà nhà (31)", "構造", "こうぞう", "Kết cấu", "", "LEO, AtHome, Zumen"], ["Phòng và toà nhà (31)", "木造", "もくぞう", "Nhà gỗ", "", "LEO, AtHome, Zumen"], ["Phòng và toà nhà (31)", "鉄骨造", "てっこつぞう", "Khung thép", "", "LEO, AtHome"], ["Phòng và toà nhà (31)", "階", "かい", "Tầng", "", "REINS, UR"], ["Phòng và toà nhà (31)", "所在階", "しょざいかい", "Tầng của phòng", "", "REINS"], ["Phòng và toà nhà (31)", "号室", "ごうしつ", "Số phòng", "", ""], ["Phòng và toà nhà (31)", "アパート", "アパート", "Nhà trọ nhỏ (apartment)", "", "REINS, AtHome"], ["Phòng và toà nhà (31)", "マンション", "マンション", "Chung cư (mansion)", "", "ITANDI, REINS, Village, AtHome"], ["Phòng và toà nhà (31)", "一戸建て", "いっこだて", "Nhà riêng", "", ""], ["Phòng và toà nhà (31)", "貸家", "かしや", "Nhà cho thuê (nguyên căn)", "", ""], ["Phòng và toà nhà (31)", "メゾネット", "メゾネット", "Căn 2 tầng", "", "RealNetPro"], ["Phòng và toà nhà (31)", "シェアハウス", "シェアハウス", "Nhà ở ghép", "", "RealNetPro"], ["Phòng và toà nhà (31)", "設備", "せつび", "Trang thiết bị", "", "nhiều web"], ["Phòng và toà nhà (31)", "バス・トイレ別", "バス・トイレべつ", "Bồn tắm và WC tách riêng", "ô lọc hay dùng", "REINS"], ["Phòng và toà nhà (31)", "オートロック", "オートロック", "Khoá cửa tự động", "", "Zumen"], ["Phòng và toà nhà (31)", "エアコン", "エアコン", "Điều hoà", "", ""], ["Phòng và toà nhà (31)", "暗証番号", "あんしょうばんごう", "Mật mã (hộp khoá)", "", "Zumen"], ["Phòng và toà nhà (31)", "インターネット", "インターネット", "Internet", "", "ITANDI, Village"], ["Phòng và toà nhà (31)", "ガス", "ガス", "Gas", "", "ITANDI, REINS, LEO"], ["Phòng và toà nhà (31)", "プロパン", "プロパン", "Gas bình", "đắt hơn gas thành phố", ""], ["Phòng và toà nhà (31)", "キッチン", "キッチン", "Bếp", "", "ITANDI, REINS"], ["Phòng và toà nhà (31)", "テレビ", "テレビ", "Tivi", "", "ITANDI"], ["Ga · địa chỉ · khu vực (20)", "駅", "えき", "Ga", "", "nhiều web"], ["Ga · địa chỉ · khu vực (20)", "徒歩", "とほ", "Đi bộ", "", "ITANDI, REINS, LEO, AtHome"], ["Ga · địa chỉ · khu vực (20)", "分", "ふん", "Phút", "徒歩5分 = đi bộ 5 phút", "ITANDI, RealNetPro, REINS, AtHome"], ["Ga · địa chỉ · khu vực (20)", "沿線", "えんせん", "Tuyến tàu", "", "nhiều web"], ["Ga · địa chỉ · khu vực (20)", "駅から徒歩", "えきからとほ", "Đi bộ từ ga", "", "REINS"], ["Ga · địa chỉ · khu vực (20)", "乗換案内", "のりかえあんない", "Tra tuyến đổi tàu", "", ""], ["Ga · địa chỉ · khu vực (20)", "所在地", "しょざいち", "Địa chỉ", "", "ITANDI, REINS, AtHome"], ["Ga · địa chỉ · khu vực (20)", "都道府県", "とどうふけん", "Tỉnh / thành", "", "ITANDI, REINS, Village"], ["Ga · địa chỉ · khu vực (20)", "市区町村", "しくちょうそん", "Thành phố / quận / thị trấn", "", "ITANDI, Village, LEO"], ["Ga · địa chỉ · khu vực (20)", "丁目", "ちょうめ", "Khu phố (số)", "", "ITANDI, REINS"], ["Ga · địa chỉ · khu vực (20)", "東京都", "とうきょうと", "Tokyo", "", "RealNetPro"], ["Ga · địa chỉ · khu vực (20)", "大阪府", "おおさかふ", "Osaka", "", "ITANDI, REINS, UR, LEO"], ["Ga · địa chỉ · khu vực (20)", "埼玉県", "さいたまけん", "Saitama", "", "REINS"], ["Ga · địa chỉ · khu vực (20)", "千葉県", "ちばけん", "Chiba", "", ""], ["Ga · địa chỉ · khu vực (20)", "神奈川県", "かながわけん", "Kanagawa", "", ""], ["Ga · địa chỉ · khu vực (20)", "兵庫県", "ひょうごけん", "Hyogo", "", ""], ["Ga · địa chỉ · khu vực (20)", "京都府", "きょうとふ", "Kyoto", "", "LEO"], ["Ga · địa chỉ · khu vực (20)", "近畿", "きんき", "Vùng Kansai (Kinki)", "", "ITANDI, REINS"], ["Ga · địa chỉ · khu vực (20)", "地図", "ちず", "Bản đồ", "", "ITANDI, UR, LEO, AtHome"], ["Ga · địa chỉ · khu vực (20)", "マップ", "マップ", "Bản đồ (map)", "", "RealNetPro, AtHome"], ["Công ty · môi giới (21)", "広告料", "こうこくりょう", "Tiền quảng cáo (AD)", "", "Zumen"], ["Công ty · môi giới (21)", "広告費", "こうこくひ", "Phí quảng cáo (AD)", "", "ITANDI, REINS, AtHome"], ["Công ty · môi giới (21)", "広告可", "こうこくか", "Được quảng cáo / đăng lại", "", "REINS"], ["Công ty · môi giới (21)", "報酬", "ほうしゅう", "Thù lao / hoa hồng", "", "REINS, Zumen"], ["Công ty · môi giới (21)", "負担割合", "ふたんわりあい", "Tỷ lệ ai chịu phí", "", ""], ["Công ty · môi giới (21)", "配分割合", "はいぶんわりあい", "Tỷ lệ chia", "", "REINS"], ["Công ty · môi giới (21)", "元付", "もとづけ", "Công ty giữ căn (bên chủ nhà)", "", "RealNetPro, REINS, Zumen"], ["Công ty · môi giới (21)", "客付", "きゃくづけ", "Công ty có khách (là mình)", "", "RealNetPro, Zumen"], ["Công ty · môi giới (21)", "取引態様", "とりひきたいよう", "Hình thức giao dịch", "", "REINS, Zumen"], ["Công ty · môi giới (21)", "媒介", "ばいかい", "Trung gian", "", "REINS, Zumen"], ["Công ty · môi giới (21)", "仲介", "ちゅうかい", "Môi giới", "", "nhiều web"], ["Công ty · môi giới (21)", "代理", "だいり", "Đại lý", "", "ITANDI, REINS, Zumen"], ["Công ty · môi giới (21)", "管理会社", "かんりがいしゃ", "Công ty quản lý", "", "RealNetPro, Zumen"], ["Công ty · môi giới (21)", "当方不払", "とうほうふばらい", "Bên mình không trả (AD 0)", "", ""], ["Công ty · môi giới (21)", "貸主", "かしぬし", "Chủ nhà", "", "REINS, Zumen"], ["Công ty · môi giới (21)", "借主", "かりぬし", "Người thuê", "", ""], ["Công ty · môi giới (21)", "株式会社", "かぶしきがいしゃ", "Công ty cổ phần (株)", "", "Zumen"], ["Công ty · môi giới (21)", "商号", "しょうごう", "Tên công ty", "", "REINS"], ["Công ty · môi giới (21)", "担当", "たんとう", "Người phụ trách", "", "ITANDI, REINS, LEO"], ["Công ty · môi giới (21)", "問合せ先", "といあわせさき", "Nơi liên hệ", "", "REINS"], ["Công ty · môi giới (21)", "電話番号", "でんわばんごう", "Số điện thoại", "", "ITANDI, RealNetPro, REINS"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "在留資格", "ざいりゅうしかく", "Tư cách lưu trú (visa)", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "在留カード", "ざいりゅうカード", "Thẻ ngoại kiều", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "本人確認書類", "ほんにんかくにんしょるい", "Giấy tờ xác minh danh tính", "", "ITANDI, UR"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "健康保険証", "けんこうほけんしょう", "Thẻ bảo hiểm y tế", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "勤務先", "きんむさき", "Nơi làm việc", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "勤続年数", "きんぞくねんすう", "Số năm làm việc", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "税込年収", "ぜいこみねんしゅう", "Thu nhập năm (gồm thuế)", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "日本滞在歴", "にほんたいざいれき", "Thời gian ở Nhật", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "学校名", "がっこうめい", "Tên trường", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "続柄", "つづきがら", "Quan hệ (với người liên lạc)", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "入居希望日", "にゅうきょきぼうび", "Ngày muốn vào ở", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "入居申込", "にゅうきょもうしこみ", "Đơn xin vào ở", "", "ITANDI, RealNetPro"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "申込者", "もうしこみしゃ", "Người nộp đơn", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "転居理由", "てんきょりゆう", "Lý do chuyển nhà", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "郵便番号", "ゆうびんばんごう", "Mã bưu điện", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "携帯番号", "けいたいばんごう", "Số điện thoại di động", "", "ITANDI, Village"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "性別", "せいべつ", "Giới tính", "", "ITANDI"], ["Hồ sơ khách · giấy tờ đăng ký (18)", "年代", "ねんだい", "Độ tuổi", "", "ITANDI"], ["Nút · menu · thông báo trên web (39)", "検索", "けんさく", "Tìm kiếm", "", "nhiều web"], ["Nút · menu · thông báo trên web (39)", "物件検索", "ぶっけんけんさく", "Tìm căn", "", "REINS, LEO, AtHome"], ["Nút · menu · thông báo trên web (39)", "詳細", "しょうさい", "Chi tiết", "", "nhiều web"], ["Nút · menu · thông báo trên web (39)", "図面", "ずめん", "Zumen (bản vẽ tin căn)", "", "nhiều web"], ["Nút · menu · thông báo trên web (39)", "図面あり", "ずめんあり", "Có zumen", "", "REINS"], ["Nút · menu · thông báo trên web (39)", "間取図", "まどりず", "Sơ đồ phòng", "", ""], ["Nút · menu · thông báo trên web (39)", "絞り込み", "しぼりこみ", "Lọc thu hẹp", "", "RealNetPro, UR"], ["Nút · menu · thông báo trên web (39)", "条件", "じょうけん", "Điều kiện", "", "nhiều web"], ["Nút · menu · thông báo trên web (39)", "こだわり条件", "こだわりじょうけん", "Điều kiện ưu tiên (lọc thêm)", "", "REINS, LEO, AtHome"], ["Nút · menu · thông báo trên web (39)", "リセット", "リセット", "Đặt lại", "", "RealNetPro"], ["Nút · menu · thông báo trên web (39)", "並び順", "ならびじゅん", "Thứ tự sắp xếp", "", "REINS"], ["Nút · menu · thông báo trên web (39)", "並び替え", "ならびかえ", "Sắp xếp lại", "", "Village, AtHome"], ["Nút · menu · thông báo trên web (39)", "最新順", "さいしんじゅん", "Mới nhất trước", "", "REINS"], ["Nút · menu · thông báo trên web (39)", "次へ", "つぎへ", "Tiếp", "", "ITANDI, REINS"], ["Nút · menu · thông báo trên web (39)", "閉じる", "とじる", "Đóng", "", "REINS"], ["Nút · menu · thông báo trên web (39)", "送信", "そうしん", "Gửi", "", "ITANDI"], ["Nút · menu · thông báo trên web (39)", "確定", "かくてい", "Xác nhận", "", "ITANDI, Village"], ["Nút · menu · thông báo trên web (39)", "選択", "せんたく", "Chọn", "", "nhiều web"], ["Nút · menu · thông báo trên web (39)", "追加", "ついか", "Thêm", "", "RealNetPro, Village, LEO"], ["Nút · menu · thông báo trên web (39)", "削除", "さくじょ", "Xoá", "", "ITANDI"], ["Nút · menu · thông báo trên web (39)", "一時保存", "いちじほぞん", "Lưu tạm", "", "ITANDI"], ["Nút · menu · thông báo trên web (39)", "印刷", "いんさつ", "In", "", "RealNetPro"], ["Nút · menu · thông báo trên web (39)", "ダウンロード", "ダウンロード", "Tải về", "", "RealNetPro"], ["Nút · menu · thông báo trên web (39)", "マップ検索", "マップけんさく", "Tìm trên bản đồ", "", "RealNetPro"], ["Nút · menu · thông báo trên web (39)", "リスト検索", "リストけんさく", "Tìm dạng danh sách", "", "ITANDI, RealNetPro"], ["Nút · menu · thông báo trên web (39)", "地図から探す", "ちずからさがす", "Tìm từ bản đồ", "", "UR, LEO, AtHome"], ["Nút · menu · thông báo trên web (39)", "沿線から探す", "えんせんからさがす", "Tìm theo tuyến", "", "AtHome"], ["Nút · menu · thông báo trên web (39)", "エリアから探す", "エリアからさがす", "Tìm theo khu vực", "", "UR"], ["Nút · menu · thông báo trên web (39)", "フリーワード", "フリーワード", "Từ khoá tự do", "", "RealNetPro, AtHome"], ["Nút · menu · thông báo trên web (39)", "この条件で検索する", "このじょうけんでけんさくする", "Tìm với điều kiện này", "REINS", "UR, LEO"], ["Nút · menu · thông báo trên web (39)", "検索結果", "けんさくけっか", "Kết quả tìm", "", "ITANDI, REINS"], ["Nút · menu · thông báo trên web (39)", "成約事例検索", "せいやくじれいけんさく", "Tìm ca đã ký", "RealNetPro", "AtHome"], ["Nút · menu · thông báo trên web (39)", "流通物件検索", "りゅうつうぶっけんけんさく", "Tìm căn lưu hành (RNP)", "RealNetPro", "AtHome"], ["Nút · menu · thông báo trên web (39)", "賃貸検索条件入力", "ちんたいけんさくじょうけんにゅうりょく", "Nhập điều kiện tìm thuê", "REINS", "REINS"], ["Nút · menu · thông báo trên web (39)", "物件画像あり", "ぶっけんがぞうあり", "Có ảnh căn", "", "REINS"], ["Nút · menu · thông báo trên web (39)", "この物件に入居申込みする", "このぶっけんににゅうきょもうしこみする", "Nộp đơn vào căn này", "", "RealNetPro"], ["Nút · menu · thông báo trên web (39)", "申込時必須書類", "もうしこみじひっすしょるい", "Giấy tờ bắt buộc khi nộp đơn", "", "RealNetPro"], ["Nút · menu · thông báo trên web (39)", "電子契約サービス", "でんしけいやくサービス", "Dịch vụ ký hợp đồng điện tử", "LEO", "LEO"], ["Nút · menu · thông báo trên web (39)", "ご希望の条件に一致する検索結果がありませんでした", "ごきぼうのじょうけんにいっちするけんさくけっかがありませんでした", "Không có kết quả khớp điều kiện", "", "ITANDI"], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "コーポ", "コーポ", "Chung cư nhỏ (corporate)", "", ""], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "ハイツ", "ハイツ", "Heights (tên toà)", "", "REINS"], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "メゾン", "メゾン", "Maison", "", ""], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "レジデンス", "レジデンス", "Residence", "", ""], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "パレス", "パレス", "Palace", "", "LEO"], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "コート", "コート", "Court", "", "REINS"], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "ビル", "ビル", "Toà nhà (building)", "", ""], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "ヒルズ", "ヒルズ", "Hills", "", ""], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "荘", "そう", "Nhà trọ kiểu cũ", "藤田荘, ふじ荘", ""], ["Chữ trong tên toà nhà (đừng nhầm với điều kiện) (10)", "三国", "みくに", "Tên khu ở Osaka", "⚠️ bẫy: 国 trong tên toà ≠ ô ①", ""]]; // [nhóm, chữ, cách đọc, nghĩa, ghi chú, web]
+const GROUPS = [...new Set(DATA.map(d => d[0]))];
+const KEY = 'tv-known-v1';
+let known = new Set();
+try { known = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch (e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify([...known])); } catch (e) {} }
+
+let deck = 'all', queue = [], flipped = false;
+const $ = id => document.getElementById(id);
+
+function shuffle(a){ for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function pool(){ return DATA.filter(d => deck === 'all' || d[0] === deck); }
+
+function buildChips(){
+  const box = $('chips'); box.innerHTML = '';
+  const mk = (val, label) => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (deck === val ? ' on' : '');
+    b.textContent = label;
+    b.onclick = () => { deck = val; buildChips(); rebuild(); };
+    box.appendChild(b);
+  };
+  mk('all', 'Tất cả (' + DATA.length + ')');
+  GROUPS.forEach(g => mk(g, g.replace(/\s*\(.*\)\s*$/, '') + ' (' + DATA.filter(d => d[0] === g).length + ')'));
+}
+
+function rebuild(){
+  let list = pool();
+  if ($('oUnknown').checked) list = list.filter(d => !known.has(d[1]));
+  queue = list.slice();
+  if ($('oShuffle').checked) shuffle(queue);
+  flipped = false;
+  render();
+}
+
+function sizeClass(t){ const n = [...t].length; return n <= 3 ? 't1' : n <= 6 ? 't2' : n <= 10 ? 't3' : 't4'; }
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function updateProg(){
+  const p = pool(), k = p.filter(d => known.has(d[1])).length;
+  $('pLeft').textContent = queue.length ? 'Còn ' + queue.length + ' thẻ trong vòng này' : 'Hết vòng';
+  $('pKnown').textContent = 'Đã thuộc ' + k + ' / ' + p.length;
+  $('bar').style.width = (p.length ? k / p.length * 100 : 0) + '%';
+}
+
+function render(){
+  updateProg();
+  const area = $('area');
+  if (!queue.length) {
+    $('btns').style.display = 'none';
+    area.innerHTML = '<div class="done"><h2>🎉 Xong bộ này</h2><div>Bạn đã đi hết các thẻ trong vòng này.</div>' +
+      '<button id="again">Học lại cả bộ</button></div>';
+    $('again').onclick = () => { $('oUnknown').checked = false; rebuild(); };
+    return;
+  }
+  $('btns').style.display = 'grid';
+  const d = queue[0];
+  const showRead = $('oRead').checked && d[2] && d[2] !== d[1];
+  area.innerHTML =
+    '<div class="stage" id="stage">' +
+      '<div class="stamp ok" id="sOk">THUỘC</div><div class="stamp no" id="sNo">CHƯA</div>' +
+      '<div class="card' + (flipped ? ' flipped' : '') + '" id="card"><div class="inner">' +
+        '<div class="face front"><div class="tag">' + esc(d[0].replace(/\s*\(.*\)\s*$/, '')) + '</div>' +
+          '<div class="term ' + sizeClass(d[1]) + '">' + esc(d[1]) + '</div>' +
+          (showRead ? '<div class="read">' + esc(d[2]) + '</div>' : '') +
+          '<div class="hint">bấm để lật</div></div>' +
+        '<div class="face back"><div class="tag">' + esc(d[1]) + (d[2] && d[2] !== d[1] ? ' · ' + esc(d[2]) : '') + '</div>' +
+          '<div class="mean">' + esc(d[3]) + '</div>' +
+          (d[4] ? '<div class="note">' + esc(d[4]) + '</div>' : '') +
+          (d[5] ? '<div class="small">Gặp ở: <b>' + esc(d[5]) + '</b></div>' : '') + '</div>' +
+      '</div></div></div>';
+  attachDrag();
+}
+
+function flip(){ if (!queue.length) return; flipped = !flipped; const c = $('card'); if (c) c.classList.toggle('flipped', flipped); }
+
+function answer(ok){
+  if (!queue.length) return;
+  const d = queue.shift();
+  if (ok) { known.add(d[1]); save(); }
+  else { queue.push(d); }
+  if (ok && $('oUnknown').checked === false) { /* giữ trong vòng nhưng đã đánh dấu */ }
+  flipped = false;
+  render();
+}
+
+function fly(dir){
+  const s = $('stage'); if (!s) return answer(dir > 0);
+  s.classList.remove('drag'); s.classList.add('snap');
+  s.style.transform = 'translateX(' + (dir * 480) + 'px) rotate(' + (dir * 16) + 'deg)';
+  s.style.opacity = '0';
+  setTimeout(() => answer(dir > 0), 230);
+}
+
+function attachDrag(){
+  const s = $('stage'); if (!s) return;
+  let sx = 0, sy = 0, dx = 0, down = false, moved = false;
+  const sOk = $('sOk'), sNo = $('sNo');
+  s.addEventListener('pointerdown', e => { down = true; moved = false; sx = e.clientX; sy = e.clientY; dx = 0; s.classList.add('drag'); try { s.setPointerCapture(e.pointerId); } catch (x) {} });
+  s.addEventListener('pointermove', e => {
+    if (!down) return;
+    dx = e.clientX - sx;
+    if (Math.abs(dx) > 8) moved = true;
+    if (moved) {
+      s.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx / 22) + 'deg)';
+      sOk.style.opacity = dx > 0 ? Math.min(1, dx / 90) : 0;
+      sNo.style.opacity = dx < 0 ? Math.min(1, -dx / 90) : 0;
+    }
+  });
+  const end = () => {
+    if (!down) return; down = false;
+    if (!moved) { s.classList.remove('drag'); flip(); return; }
+    if (dx > 90) return fly(1);
+    if (dx < -90) return fly(-1);
+    s.classList.remove('drag'); s.classList.add('snap');
+    s.style.transform = ''; sOk.style.opacity = 0; sNo.style.opacity = 0;
+  };
+  s.addEventListener('pointerup', end);
+  s.addEventListener('pointercancel', end);
+}
+
+$('bFlip').onclick = flip;
+$('bOk').onclick = () => fly(1);
+$('bNo').onclick = () => fly(-1);
+['oShuffle','oUnknown'].forEach(id => $(id).onchange = rebuild);
+$('oRead').onchange = render;
+$('reset').onclick = () => { if (confirm('Xoá hết tiến độ "đã thuộc"?')) { known = new Set(); save(); rebuild(); } };
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); flip(); }
+  else if (e.code === 'ArrowRight') fly(1);
+  else if (e.code === 'ArrowLeft') fly(-1);
+});
+
+buildChips();
+rebuild();
+</script>
+<script>if ('serviceWorker' in navigator && location.protocol === 'https:') { navigator.serviceWorker.register('sw.js'); }</script>
+</body>
+</html>
